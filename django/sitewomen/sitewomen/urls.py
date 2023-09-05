@@ -21,7 +21,7 @@ from women import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('women.urls')),
+    path('', include('women.urls', namespace='women')),
 ]
 
 handler404 = views.page_not_found

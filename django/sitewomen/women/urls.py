@@ -2,6 +2,9 @@ from django.urls import path, re_path, register_converter
 
 from . import views, converters
 
+
+app_name = 'women'
+
 register_converter(converters.FourDigitYearConverter, "year4")
 
 urlpatterns = [
