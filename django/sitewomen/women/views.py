@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 
 
@@ -20,7 +20,8 @@ def categoris_by_slug(request, cat_slug):
 
 def archive(request, year):
     if year > 2023:
-        raise Http404()
+        url = reverse('cats', args=('sport',))
+        return redirect(url)
     return HttpResponse(f"<h1>Архив по годам</h1><p>год: {year}</p>")
 
 
