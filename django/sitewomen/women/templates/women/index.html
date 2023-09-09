@@ -6,6 +6,27 @@
 </head>
 <body>
 <h1>{{ title }}</h1>
-<p>{{ menu.2 }}</p>
+<p>{{ menu | join:' | ' }}</p>
+<p>{{ url }}</p>
+{% url 'women:cats' 'sports' as the_url %}
+<a href="{{ the_url }}">Link to categories</a>
+{% url 'women:cats' url as the_url2 %}
+    <div>
+<a href="{{ the_url2 }}">Link to women</a>
+    </div>
+<ul>
+    {% for p in posts %}
+    {% if p.is_published %}
+    <li>
+        <h2> {{ p.title }} </h2>
+        <p> {{ p.content }} </p>
+        {% if not forloop.last %}
+        <hr>
+        {% endif %}
+    </li>
+    {% endif %}
+    {% endfor %}
+</ul>
+
 </body>
 </html>
