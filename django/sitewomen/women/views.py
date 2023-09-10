@@ -4,7 +4,11 @@ from django.template.loader import render_to_string
 from django.template.defaultfilters import slugify
 
 
-menu = ['О сайте', 'Добавить статью', 'Обратная связь', 'Выйти']
+menu = [{'title': "О сайте", 'url_name': 'about'},
+        {'title': "Добавить статью", 'url_name': 'add_page'},
+        {'title': "Обратная связь", 'url_name': 'contact'},
+        {'title': "Войти", 'url_name': 'login'}
+]
 
 
 data_db = [
@@ -29,12 +33,21 @@ def about(request):
                                                 'menu': menu})
 
 
-def categoris(request):
-    return HttpResponse("<h1>Статьи по категориям</h1>")
+def show_post(request, post_id):
+    return HttpResponse(f"<h2>Отображение статьи с id = {post_id}</h2>")
 
 
-def categoris_id(request, cat_id):
-    return HttpResponse(f"<h1>Статьи по категориям</h1><p>Категория id: {cat_id}</p>")
+def addpage(request):
+    return HttpResponse(f"<h2>Добавление статьи</h2>")
+
+
+def login(request):
+    return HttpResponse(f"<h2>Вход</h2>")
+
+
+def contact(request):
+    return HttpResponse(f"<h2>Обратная связь</h2>")
+
 
 
 def categoris_by_slug(request, cat_slug):
