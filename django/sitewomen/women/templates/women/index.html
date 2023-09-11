@@ -1,26 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ title }}</title>
-</head>
-<body>
-<h1>{{ title }}</h1>
-<ul>
-    <li>
-    <a href="{% url 'women:home' %}"> {{ title }}</a>
-    </li>
-    {% for m in menu %}
-    {% if not forloop.last %} <li> {% else %} <li class="last"> {% endif %}
-    <a href="{% url 'women:'|add:m.url_name %}"> {{ m.title }}</a>
-    </li>
-    {% endfor %}
-</ul>
+{% extends 'base.html' %}
 
+
+{% block content %}
+<h1 align=center>{{ title }}</h1>
+{% include 'women/includes/nav.html' %}
 {% url 'women:cats' 'sports' as the_url %}
-<a href="{{ the_url }}">Link to categories</a>
+<div align=center> <a href="{{ the_url }}">Link to categories</a> </div>
 {% url 'women:cats' url as the_url2 %}
-    <div>
+    <div align=center>
 <a href="{{ the_url2 }}">Link to women</a>
     </div>
 <ul>
@@ -38,5 +25,5 @@
     {% endfor %}
 </ul>
 
-</body>
-</html>
+{% include 'women/includes/nav.html' %}
+{% endblock %}
