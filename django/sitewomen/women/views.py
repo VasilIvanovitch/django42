@@ -4,15 +4,18 @@ from django.template.loader import render_to_string
 from django.template.defaultfilters import slugify
 
 
-menu = [{'title': "О сайте", 'url_name': 'about'},
-        {'title': "Добавить статью", 'url_name': 'add_page'},
-        {'title': "Обратная связь", 'url_name': 'contact'},
-        {'title': "Войти", 'url_name': 'login'}
+menu = [{'title': "О сайте", 'url_name': 'women:about'},
+        {'title': "Добавить статью", 'url_name': 'women:add_page'},
+        {'title': "Обратная связь", 'url_name': 'women:contact'},
+        {'title': "Войти", 'url_name': 'women:login'}
 ]
 
 
 data_db = [
-    {'id': 1, 'title': 'Анджелина Джоли', 'content': 'Биография Анджелины Джоли', 'is_published': True},
+    {'id': 1, 'title': 'Анджелина Джоли', 'content': '''<h3>Анджелина Джоли</h3> (англ. Angelina Jolie[7],
+    при рождении Войт (англ. Voight), ранее Джоли Питт (англ. Jolie Pitt); род. 4 июня 1975, Лос-Анджелес, Калифорния, США) — американская актриса кино, телевидения и озвучивания, кинорежиссёр, сценаристка, продюсер, фотомодель, посол доброй воли ООН.
+    Обладательница премии «Оскар», трёх премий «Золотой глобус» (первая актриса в истории, три года подряд выигравшая премию) и двух «Премий Гильдии киноактёров США».''',
+     'is_published': True},
     {'id': 2, 'title': 'Марго Робби', 'content': 'Биография Марго Робби', 'is_published': False},
     {'id': 3, 'title': 'Джулия Робертс', 'content': 'Биография Джулия Робертс', 'is_published': True},
 ]
@@ -47,7 +50,6 @@ def login(request):
 
 def contact(request):
     return HttpResponse(f"<h2>Обратная связь</h2>")
-
 
 
 def categoris_by_slug(request, cat_slug):
