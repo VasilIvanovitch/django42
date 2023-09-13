@@ -31,7 +31,7 @@ def index(request):
     data = {'title': 'Главная страница',
             'menu': menu,
             'posts': data_db,
-            'url': slugify('Margot Robbie')}
+            'cat_selected': 0}
     return render(request, 'women/index.html', context=data)
     # st = render_to_string('women/index.html')
     # return HttpResponse(st)
@@ -58,10 +58,12 @@ def contact(request):
     return HttpResponse(f"<h2>Обратная связь</h2>")
 
 
-def show_category(request, cat_slug):
-    if req_dict := request.GET:
-        print(req_dict)
-    return index(request)
+def show_category(request, cat_id):
+    data = {'title': 'Отображение по рубрикам',
+            'menu': menu,
+            'posts': data_db,
+            'cat_selected': cat_id}
+    return render(request, 'women/index.html', context=data)
 
 
 def archive(request, year):
