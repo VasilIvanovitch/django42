@@ -20,6 +20,12 @@ data_db = [
     {'id': 3, 'title': 'Джулия Робертс', 'content': 'Биография Джулия Робертс', 'is_published': True},
 ]
 
+cats_db = [
+    {'id': 1, 'name': 'Актрисы'},
+    {'id': 2, 'name': 'Певицы'},
+    {'id': 3, 'name': 'Спортсменки'},
+]
+
 
 def index(request):
     data = {'title': 'Главная страница',
@@ -52,10 +58,10 @@ def contact(request):
     return HttpResponse(f"<h2>Обратная связь</h2>")
 
 
-def categoris_by_slug(request, cat_slug):
+def show_category(request, cat_slug):
     if req_dict := request.GET:
         print(req_dict)
-    return HttpResponse(f"<h1>Статьи по категориям</h1><p>Категория slug: {cat_slug}</p>")
+    return index(request)
 
 
 def archive(request, year):
