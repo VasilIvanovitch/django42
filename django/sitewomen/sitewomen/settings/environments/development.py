@@ -39,6 +39,8 @@ ALLOWED_HOSTS = [
 # Installed apps for development only:
 
 INSTALLED_APPS += (
+    'django_extensions',
+
     # Better debug:
     # 'debug_toolbar',
     # 'nplusone.ext.django',

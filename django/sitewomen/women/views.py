@@ -1,8 +1,9 @@
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.template.loader import render_to_string
 from django.template.defaultfilters import slugify
 
+from women.models import Women
 
 menu = [{'title': "О сайте", 'url_name': 'women:about'},
         {'title': "Добавить статью", 'url_name': 'women:add_page'},
@@ -11,14 +12,14 @@ menu = [{'title': "О сайте", 'url_name': 'women:about'},
 ]
 
 
-data_db = [
-    {'id': 1, 'title': 'Анджелина Джоли', 'content': '''<h3>Анджелина Джоли</h3> (англ. Angelina Jolie[7],
-    при рождении Войт (англ. Voight), ранее Джоли Питт (англ. Jolie Pitt); род. 4 июня 1975, Лос-Анджелес, Калифорния, США) — американская актриса кино, телевидения и озвучивания, кинорежиссёр, сценаристка, продюсер, фотомодель, посол доброй воли ООН.
-    Обладательница премии «Оскар», трёх премий «Золотой глобус» (первая актриса в истории, три года подряд выигравшая премию) и двух «Премий Гильдии киноактёров США».''',
-     'is_published': True},
-    {'id': 2, 'title': 'Марго Робби', 'content': 'Биография Марго Робби', 'is_published': False},
-    {'id': 3, 'title': 'Джулия Робертс', 'content': 'Биография Джулия Робертс', 'is_published': True},
-]
+# data_db = [
+#     {'id': 1, 'title': 'Анджелина Джоли', 'content': '''<h3>Анджелина Джоли</h3> (англ. Angelina Jolie[7],
+#     при рождении Войт (англ. Voight), ранее Джоли Питт (англ. Jolie Pitt); род. 4 июня 1975, Лос-Анджелес, Калифорния, США) — американская актриса кино, телевидения и озвучивания, кинорежиссёр, сценаристка, продюсер, фотомодель, посол доброй воли ООН.
+#     Обладательница премии «Оскар», трёх премий «Золотой глобус» (первая актриса в истории, три года подряд выигравшая премию) и двух «Премий Гильдии киноактёров США».''',
+#      'is_published': True},
+#     {'id': 2, 'title': 'Марго Робби', 'content': 'Биография Марго Робби', 'is_published': False},
+#     {'id': 3, 'title': 'Джулия Робертс', 'content': 'Биография Джулия Робертс', 'is_published': True},
+# ]
 
 cats_db = [
     {'id': 1, 'name': 'Актрисы'},
@@ -28,9 +29,10 @@ cats_db = [
 
 
 def index(request):
+    posts = Women.objects.filter(is_published=True)
     data = {'title': 'Главная страница',
             'menu': menu,
-            'posts': data_db,
+            'posts': posts,
             'cat_selected': 0}
     return render(request, 'women/index.html', context=data)
     # st = render_to_string('women/index.html')
@@ -42,9 +44,13 @@ def about(request):
                                                 'menu': menu})
 
 
-def show_post(request, post_id):
-    return HttpResponse(f"<h2>Отображение статьи с id = {post_id}</h2>")
-
+def show_post(request, post_slug):
+    post = get_object_or_404(Women, slug=post_slug)
+    data = {'title': post.title,
+            'menu': menu,
+            'post': post,
+            'cat_selected': post_slug}
+    return render(request, 'women/post.html', context=data)
 
 def addpage(request):
     return HttpResponse(f"<h2>Добавление статьи</h2>")
@@ -59,6 +65,7 @@ def contact(request):
 
 
 def show_category(request, cat_id):
+    data_db = Women.objects.values('id', 'title', 'slug', 'content', 'is_published')
     data = {'title': 'Отображение по рубрикам',
             'menu': menu,
             'posts': data_db,
