@@ -4,6 +4,10 @@ from django.urls import reverse
 from pytils.translit import slugify
 
 
+class PublishedManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_published=True)
+
 
 class Women(models.Model):
     title = models.CharField(max_length=255, verbose_name='Название')
@@ -12,6 +16,9 @@ class Women(models.Model):
     time_create = models.DateTimeField(auto_now_add=True, verbose_name='Время создания')
     time_update = models.DateTimeField(auto_now=True, verbose_name='Время обновления')
     is_published = models.BooleanField(default=True, verbose_name='Опубликовано')
+
+    objects = models.Manager()
+    published = PublishedManager()
 
     def __str__(self):
         return self.title
@@ -22,6 +29,7 @@ class Women(models.Model):
 
     def get_absolute_url(self):
         return reverse('women:post', kwargs={'post_slug': self.slug})
+        # return reverse('women:post', args=(self.slug,))
 
 
     def save(self, *args, **kwargs):
