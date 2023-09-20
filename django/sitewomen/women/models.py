@@ -6,16 +6,20 @@ from pytils.translit import slugify
 
 class PublishedManager(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().filter(is_published=True)
+        return super().get_queryset().filter(is_published=Women.Status.PUBLISHED)
 
 
 class Women(models.Model):
+    class Status(models.IntegerChoices):
+        DRAFT = 0, 'Черновик'
+        PUBLISHED = 1, 'Опубликовано'
+
     title = models.CharField(max_length=255, verbose_name='Название')
     slug = models.SlugField(max_length=255,unique=True, db_index=True)
     content = models.TextField(blank=True, verbose_name='Контент')
     time_create = models.DateTimeField(auto_now_add=True, verbose_name='Время создания')
     time_update = models.DateTimeField(auto_now=True, verbose_name='Время обновления')
-    is_published = models.BooleanField(default=True, verbose_name='Опубликовано')
+    is_published = models.BooleanField(choices=Status.choices, default=Status.PUBLISHED, verbose_name='Опубликовано')
 
     objects = models.Manager()
     published = PublishedManager()
