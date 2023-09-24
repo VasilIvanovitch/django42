@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.template.loader import render_to_string
-from django.template.defaultfilters import slugify
 
-from women.models import Women
+
+from women.models import Women, Category
 
 menu = [{'title': "О сайте", 'url_name': 'women:about'},
         {'title': "Добавить статью", 'url_name': 'women:add_page'},
@@ -21,11 +21,11 @@ menu = [{'title': "О сайте", 'url_name': 'women:about'},
 #     {'id': 3, 'title': 'Джулия Робертс', 'content': 'Биография Джулия Робертс', 'is_published': True},
 # ]
 
-cats_db = [
-    {'id': 1, 'name': 'Актрисы'},
-    {'id': 2, 'name': 'Певицы'},
-    {'id': 3, 'name': 'Спортсменки'},
-]
+# cats_db = [
+#     {'id': 1, 'name': 'Актрисы'},
+#     {'id': 2, 'name': 'Певицы'},
+#     {'id': 3, 'name': 'Спортсменки'},
+# ]
 
 
 def index(request):
