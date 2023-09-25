@@ -64,12 +64,13 @@ def contact(request):
     return HttpResponse(f"<h2>Обратная связь</h2>")
 
 
-def show_category(request, cat_id):
-    data_db = Women.objects.values('id', 'title', 'slug', 'content', 'is_published')
-    data = {'title': 'Отображение по рубрикам',
+def show_category(request, cat_slug):
+    category = get_object_or_404(Category, slug=cat_slug)
+    data_db = Women.published.filter(cat_id=category.pk)
+    data = {'title': f'Рубрика {category.name}',
             'menu': menu,
             'posts': data_db,
-            'cat_selected': cat_id}
+            'cat_selected': category.pk}
     return render(request, 'women/index.html', context=data)
 
 
