@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.template.loader import render_to_string
 
 
-from women.models import Women, Category
+from women.models import Women, Category, TagPosts
 
 menu = [{'title': "О сайте", 'url_name': 'women:about'},
         {'title': "Добавить статью", 'url_name': 'women:add_page'},
@@ -19,12 +19,6 @@ menu = [{'title': "О сайте", 'url_name': 'women:about'},
 #      'is_published': True},
 #     {'id': 2, 'title': 'Марго Робби', 'content': 'Биография Марго Робби', 'is_published': False},
 #     {'id': 3, 'title': 'Джулия Робертс', 'content': 'Биография Джулия Робертс', 'is_published': True},
-# ]
-
-# cats_db = [
-#     {'id': 1, 'name': 'Актрисы'},
-#     {'id': 2, 'name': 'Певицы'},
-#     {'id': 3, 'name': 'Спортсменки'},
 # ]
 
 
@@ -49,7 +43,7 @@ def show_post(request, post_slug):
     data = {'title': post.title,
             'menu': menu,
             'post': post,
-            'cat_selected': post_slug}
+            'cat_selected': None}
     return render(request, 'women/post.html', context=data)
 
 def addpage(request):
@@ -69,8 +63,19 @@ def show_category(request, cat_slug):
     data_db = Women.published.filter(cat_id=category.pk)
     data = {'title': f'Рубрика {category.name}',
             'menu': menu,
-            'posts': data_db,
+            'post': data_db,
             'cat_selected': category.pk}
+    return render(request, 'women/index.html', context=data)
+
+def show_tag_postlist(request, tag_slug):
+    tag = get_object_or_404(TagPosts, slug=tag_slug)
+    posts = tag.womens.filter(is_published=Women.Status.PUBLISHED)
+    data = {
+        'title': f'Тег: {tag.tag}',
+        'menu': menu,
+        'posts': posts,
+        'cat_selected': None
+    }
     return render(request, 'women/index.html', context=data)
 
 
