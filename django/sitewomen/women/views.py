@@ -63,7 +63,7 @@ def show_category(request, cat_slug):
     data_db = Women.published.filter(cat_id=category.pk)
     data = {'title': f'Рубрика {category.name}',
             'menu': menu,
-            'post': data_db,
+            'posts': data_db,
             'cat_selected': category.pk}
     return render(request, 'women/index.html', context=data)
 

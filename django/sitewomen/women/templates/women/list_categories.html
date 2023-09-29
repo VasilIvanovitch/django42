@@ -3,6 +3,5 @@
     <li class="selected">{{ cat.name }}</li>
 {% else %}
      <li><a href="{{ cat.get_absolute_url }}">{{ cat.name }}</a></li>
-   <!-- <li><a href="{% url 'women:category' cat.slug %}">{{ cat.name }}</a></li> -->
 {% endif %}
 {% endfor %}
