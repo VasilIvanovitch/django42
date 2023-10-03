@@ -32,7 +32,8 @@ class Women(models.Model):
         return self.title
 
     class Meta:
-        ordering = ['time_create']
+        # ordering = ['time_create']
+        verbose_name = 'Знаменитые женщины'
 
 
     def get_absolute_url(self):
@@ -68,6 +69,7 @@ class TagPosts(models.Model):
     tag = models.CharField(max_length=100, db_index=True)
     slug = models.SlugField(max_length=255, unique=True, db_index=True)
 
+
     def __str__(self):
         return self.tag
 
@@ -84,6 +86,7 @@ class TagPosts(models.Model):
 class Husband(models.Model):
     name = models.CharField(max_length=100, verbose_name='Имя')
     age = models.IntegerField(null=True, verbose_name='Возраст')
+    m_count = models.IntegerField(blank=True, default=0)
 
     def __str__(self):
         return self.name

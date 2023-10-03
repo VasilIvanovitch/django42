@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from women.models import Women, Category, TagPosts
+from women.models import Women, Category, TagPosts, Husband
 
 
 @admin.register(Women)
@@ -21,3 +21,10 @@ class CategoryAdmin(admin.ModelAdmin):
 @admin.register(TagPosts)
 class TagAdmin(admin.ModelAdmin):
     list_display = ('id', 'tag', 'slug')
+
+
+@admin.register(Husband)
+class HusbandAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'age')
+
+
