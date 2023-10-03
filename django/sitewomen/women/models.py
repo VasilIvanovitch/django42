@@ -91,3 +91,9 @@ class Husband(models.Model):
     def __str__(self):
         return self.name
 
+
+def read_qw(lst):
+    for i, x in enumerate(lst):
+        if i == 0:
+            print(list(x.__dict__)[1:])
+        print(list(x.__dict__.values())[1:])
