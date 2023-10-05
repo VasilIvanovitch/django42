@@ -42,7 +42,7 @@ INSTALLED_APPS += (
     'django_extensions',
 
     # Better debug:
-    # 'debug_toolbar',
+    'debug_toolbar',
     # 'nplusone.ext.django',
 
     # Linting migrations:
@@ -66,7 +66,7 @@ INSTALLED_APPS += (
 # https://django-debug-toolbar.readthedocs.io
 
 MIDDLEWARE += (
-    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     # 'debug_toolbar_force.middleware.ForceDebugToolbarMiddleware',
 
     # https://github.com/bradmontgomery/django-querycount
@@ -90,10 +90,11 @@ def _custom_show_toolbar(request: 'HttpRequest') -> bool:
     return DEBUG and request.user.is_superuser
 
 
-DEBUG_TOOLBAR_CONFIG = {
-    'SHOW_TOOLBAR_CALLBACK':
-        'server.settings.environments.development._custom_show_toolbar',
-}
+# показывать DEBUG_TOOLBAR только superuser
+# DEBUG_TOOLBAR_CONFIG = {
+#     'SHOW_TOOLBAR_CALLBACK':
+#         'sitewomen.settings.environments.development._custom_show_toolbar',
+# }
 
 # This will make debug toolbar to work with django-csp,
 # since `ddt` loads some scripts from `ajax.googleapis.com`:
