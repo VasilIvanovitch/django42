@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.http import HttpResponse, HttpResponseNotFound, Http404
+from django.db.models import Prefetch
 from django.template.loader import render_to_string
 
 
@@ -23,7 +24,8 @@ menu = [{'title': "О сайте", 'url_name': 'women:about'},
 
 
 def index(request):
-    posts = Women.published.all().select_related('cat')
+    posts = Women.published.all().prefetch_related(Prefetch('cat', to_attr='category'))
+    # posts = Women.published.all().select_related('cat')
     data = {'title': 'Главная страница',
             'menu': menu,
             'posts': posts,
