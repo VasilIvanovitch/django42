@@ -128,7 +128,7 @@ TIME_ZONE = 'UTC'
 STATIC_URL = 'static/'
 
 # Список нестандартных путей к статическим файлам
-# STATICFILES_DIRS = ()
+STATICFILES_DIRS = (BASE_DIR / 'static',)
 
 # STATICFILES_FINDERS = (
 #     'django.contrib.staticfiles.finders.FileSystemFinder',
