@@ -33,6 +33,7 @@ class WomenAdmin(admin.ModelAdmin):
     list_per_page = 7
     actions = ['set_published', 'set_draft']
     # readonly_fields = ['slug']
+    # exclude =
 
 
     @admin.display(description='Краткое описание', ordering='content')
