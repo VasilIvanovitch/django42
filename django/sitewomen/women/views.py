@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.db.models import Prefetch
 from django.template.loader import render_to_string
 
-
+from women.forms import AddPostForm
 from women.models import Women, Category, TagPosts
 
 menu = [{'title': "О сайте", 'url_name': 'women:about'},
@@ -49,8 +49,14 @@ def show_post(request, post_slug):
     return render(request, 'women/post.html', context=data)
 
 def addpage(request):
+    if request.method == 'POST':
+        form = AddPostForm(request.POST)
+        if form.is_valid():
+            print(form.cleaned_data)
+    else:
+        form = AddPostForm()
     return render(request, 'women/addpage.html', context={'menu': menu,
-                                                          'title': 'Добавление страницы'})
+                                                'title': 'Добавление страницы', 'form': form})
 
 
 def login(request):
