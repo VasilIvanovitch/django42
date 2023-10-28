@@ -54,7 +54,7 @@ def addpage(request):
         if form.is_valid():
             try:
                 Women.objects.create(**form.cleaned_data)
-                return redirect('home')
+                return redirect('women:home')
             except:
                 form.add_error(None, 'Ошибка добавления поста')
             # print(form.cleaned_data)
