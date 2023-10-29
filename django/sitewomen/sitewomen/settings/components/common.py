@@ -162,7 +162,7 @@ TEMPLATES = [
 # https://docs.djangoproject.com/en/4.2/topics/files/
 
 # MEDIA_URL = '/media/'
-# MEDIA_ROOT = BASE_DIR.joinpath('media')
+MEDIA_ROOT = BASE_DIR.joinpath('media')
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

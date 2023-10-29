@@ -4,8 +4,8 @@ from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.db.models import Prefetch
 from django.template.loader import render_to_string
 
-from women.forms import AddPostForm
-from women.models import Women, Category, TagPosts
+from women.forms import AddPostForm, UploadFileForm
+from women.models import Women, Category, TagPosts, UploadFiles
 
 menu = [{'title': "О сайте", 'url_name': 'women:about'},
         {'title': "Добавить статью", 'url_name': 'women:add_page'},
@@ -28,10 +28,6 @@ menu = [{'title': "О сайте", 'url_name': 'women:about'},
 #         for chunk in f.chunks():
 #             destination.write(chunk)
 
-def handle_uploaded_files(f):
-    with open(f'uploads/{f.name}', 'wb+') as destination:
-        for chunk in f.chunks():
-            destination.write(chunk)
 
 def handle_uploaded_file(f):
     name = f.name
@@ -42,7 +38,7 @@ def handle_uploaded_file(f):
         name = name[:name.rindex('.')]
 
     suffix = str(uuid.uuid4())
-    with open(f"uploads/{name}_{suffix}{ext}", "wb+") as destination:
+    with open(f"uploads/{name}_{suffix}{ext}", "wb+") as destination:  #  файл не загружается, вероятно проблемма с правами доступа
         for chunk in f.chunks():
             destination.write(chunk)
 
@@ -61,9 +57,15 @@ def index(request):
 
 def about(request):
     if request.method == 'POST':
-        handle_uploaded_file(request.FILES['file_upload'])
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            # handle_uploaded_file(form.cleaned_data['file'])
+            fr = UploadFiles(file=form.cleaned_data['file'])
+            fr.save()
+    else:
+        form = UploadFileForm()
     return render(request, 'women/about.html', {'title': 'О сайте',
-                                                'menu': menu})
+                                                'menu': menu, 'form': form})
 
 
 def show_post(request, post_slug):
