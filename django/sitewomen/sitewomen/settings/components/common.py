@@ -114,9 +114,9 @@ LANGUAGES = (
     ('ru', _('Russian')),
 )
 
-LOCALE_PATHS = (
-    'locale/',
-)
+# LOCALE_PATHS = (
+#     'locale/',
+# )
 
 USE_TZ = True
 TIME_ZONE = 'UTC'

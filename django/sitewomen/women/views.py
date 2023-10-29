@@ -1,3 +1,4 @@
+import uuid
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.db.models import Prefetch
@@ -22,6 +23,29 @@ menu = [{'title': "О сайте", 'url_name': 'women:about'},
 #     {'id': 3, 'title': 'Джулия Робертс', 'content': 'Биография Джулия Робертс', 'is_published': True},
 # ]
 
+# def handle_uploaded_file(f):
+#     with open(f"uploads/{f.name}", "wb+") as destination:
+#         for chunk in f.chunks():
+#             destination.write(chunk)
+
+def handle_uploaded_files(f):
+    with open(f'uploads/{f.name}', 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
+
+def handle_uploaded_file(f):
+    name = f.name
+    ext = ''
+
+    if '.' in name:
+        ext = name[name.rindex('.'):]
+        name = name[:name.rindex('.')]
+
+    suffix = str(uuid.uuid4())
+    with open(f"uploads/{name}_{suffix}{ext}", "wb+") as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
+
 
 def index(request):
     posts = Women.published.all().prefetch_related(Prefetch('cat', to_attr='category'))
@@ -36,6 +60,8 @@ def index(request):
 
 
 def about(request):
+    if request.method == 'POST':
+        handle_uploaded_file(request.FILES['file_upload'])
     return render(request, 'women/about.html', {'title': 'О сайте',
                                                 'menu': menu})
 
