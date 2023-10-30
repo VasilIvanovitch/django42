@@ -15,7 +15,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.conf.urls.static import static
 from django.urls import path, include
+
+import sitewomen.settings.environments.development
+from sitewomen.settings.components import common
 from women import views
 
 
@@ -24,6 +28,10 @@ urlpatterns = [
     path('', include('women.urls', namespace='women')),
     path("__debug__/", include("debug_toolbar.urls")),
 ]
+
+if sitewomen.settings.environments.development.DEBUG:
+    urlpatterns += static(common.MEDIA_URL, document_root=common.MEDIA_ROOT)
+
 
 handler404 = views.page_not_found
 
