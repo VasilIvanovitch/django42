@@ -22,7 +22,7 @@ class MarriedFilter(admin.SimpleListFilter):
 
 @admin.register(Women)
 class WomenAdmin(admin.ModelAdmin):
-    fields = ('title', 'slug', ('cat', 'husband'), 'tags')
+    fields = ('title', 'slug', 'photo', ('cat', 'husband'), 'tags')
     filter_horizontal = ('tags',)
     list_display = ('title', 'time_create', 'cat', 'is_published', 'brief_info')
     list_display_links = ('title',)
