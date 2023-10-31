@@ -2,6 +2,8 @@ import uuid
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.db.models import Prefetch
+from  django.views import View
+from  django.views.generic import TemplateView
 from django.template.loader import render_to_string
 
 from women.forms import AddPostForm, UploadFileForm
@@ -53,6 +55,15 @@ def index(request):
     return render(request, 'women/index.html', context=data)
     # st = render_to_string('women/index.html')
     # return HttpResponse(st)
+
+class WomenHome(TemplateView):
+    template_name = 'women/index.html'
+    extra_context = {
+            'title': 'Главная страница',
+            'menu': menu,
+            'posts': Women.published.all().prefetch_related(Prefetch('cat', to_attr='category')),
+            'cat_selected': 0
+    }
 
 
 def about(request):

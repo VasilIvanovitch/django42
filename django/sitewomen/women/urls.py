@@ -7,7 +7,7 @@ app_name = 'women'
 register_converter(converters.FourDigitYearConverter, "year4")
 
 urlpatterns = [
-    path('', views.index, name='home'),
+    path('', views.WomenHome.as_view(), name='home'),
     path('about/', views.about, name='about'),
     path('post/<slug:post_slug>/', views.show_post, name='post'),
     path('addpage/', views.addpage, name='add_page'),

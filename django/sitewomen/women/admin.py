@@ -34,7 +34,7 @@ class WomenAdmin(admin.ModelAdmin):
     list_per_page = 7
     actions = ['set_published', 'set_draft']
     save_on_top = True
-    readonly_fields = ['post_photo']
+    readonly_fields = ['post_photo' ]
     # exclude =
 
 
