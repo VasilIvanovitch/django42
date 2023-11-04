@@ -127,6 +127,18 @@ class ShowPost(DetailView):
     def get_object(self, queryset=None):
         return get_object_or_404(Women.published, slug=self.kwargs[self.slug_url_kwarg])
 
+
+class AddPage(FormView):
+    template_name = 'women/addpage.html'
+    form_class = AddPostForm
+    success_url = reverse_lazy('women:home')
+    extra_context = {'title': 'Добавление страницы', 'menu': menu}
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+
+
 def about(request):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
@@ -148,12 +160,12 @@ def about(request):
 #             'cat_selected': None}
 #     return render(request, 'women/post.html', context=data)
 
-def addpage(request):
-    if request.method == 'POST':
-        form = AddPostForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('women:home')
+# def addpage(request):
+#     if request.method == 'POST':
+#         form = AddPostForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('women:home')
             # try:
             #     Women.objects.create(**form.cleaned_data)
             #     return redirect('women:home')
@@ -161,10 +173,10 @@ def addpage(request):
             #     form.add_error(None, 'Ошибка добавления поста')
             # print(form.cleaned_data)
 
-    else:
-        form = AddPostForm()
-    return render(request, 'women/addpage.html', context={'menu': menu,
-                                                'title': 'Добавление страницы', 'form': form})
+    # else:
+    #     form = AddPostForm()
+    # return render(request, 'women/addpage.html', context={'menu': menu,
+    #                                             'title': 'Добавление страницы', 'form': form})
 
 
 def login(request):
