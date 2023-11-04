@@ -1,9 +1,10 @@
 import uuid
+from django.urls import reverse_lazy
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.db.models import Prefetch
 from  django.views import View
-from  django.views.generic import TemplateView, ListView
+from  django.views.generic import TemplateView, ListView, DetailView, FormView
 from django.template.loader import render_to_string
 
 from women.forms import AddPostForm, UploadFileForm
@@ -97,7 +98,7 @@ class WomenTag(ListView):
     def get_queryset(self):
         tag = TagPosts.objects.filter(slug=self.kwargs['tag_slug']).first()  # get_object_or_404(TagPosts, slug=tag_slug)
         self.kwargs['tag_name'] = tag.tag
-        return tag.womens.filter(is_published=Women.Status.PUBLISHED).select_related('cat')
+        return tag.womens.filter(is_published=Women.Status.PUBLISHED).prefetch_related('cat')
 
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -107,6 +108,24 @@ class WomenTag(ListView):
         context['menu'] = menu
         context['cat_selected'] = None
         return context
+
+
+class ShowPost(DetailView):
+    template_name = 'women/post.html'
+    model = Women
+    context_object_name = 'post'
+    #  pk_url_kwarg = 'pk'
+    slug_url_kwarg = 'post_slug'
+
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = context['post'].title
+        context['menu'] = menu
+        return context
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(Women.published, slug=self.kwargs[self.slug_url_kwarg])
 
 def about(request):
     if request.method == 'POST':
@@ -121,13 +140,13 @@ def about(request):
                                                 'menu': menu, 'form': form})
 
 
-def show_post(request, post_slug):
-    post = get_object_or_404(Women, slug=post_slug)
-    data = {'title': post.title,
-            'menu': menu,
-            'post': post,
-            'cat_selected': None}
-    return render(request, 'women/post.html', context=data)
+# def show_post(request, post_slug):
+#     post = get_object_or_404(Women, slug=post_slug)
+#     data = {'title': post.title,
+#             'menu': menu,
+#             'post': post,
+#             'cat_selected': None}
+#     return render(request, 'women/post.html', context=data)
 
 def addpage(request):
     if request.method == 'POST':

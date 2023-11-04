@@ -5,7 +5,6 @@ from django.core.validators import MinLengthValidator, MaxLengthValidator
 from pytils.translit import slugify
 
 
-
 class PublishedManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(is_published=Women.Status.PUBLISHED)
