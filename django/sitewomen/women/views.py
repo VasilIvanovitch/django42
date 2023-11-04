@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.db.models import Prefetch
 from  django.views import View
-from  django.views.generic import TemplateView, ListView, DetailView, FormView
+from  django.views.generic import TemplateView, ListView, DetailView, FormView, CreateView, UpdateView, DeleteView
 from django.template.loader import render_to_string
 
 from women.forms import AddPostForm, UploadFileForm
@@ -128,15 +128,31 @@ class ShowPost(DetailView):
         return get_object_or_404(Women.published, slug=self.kwargs[self.slug_url_kwarg])
 
 
-class AddPage(FormView):
+class AddPage(CreateView):
     template_name = 'women/addpage.html'
-    form_class = AddPostForm
+    model = Women
+    fields = ['title', 'slug', 'photo', 'content', 'cat', 'is_published']
     success_url = reverse_lazy('women:home')
     extra_context = {'title': 'Добавление страницы', 'menu': menu}
 
-    def form_valid(self, form):
-        form.save()
-        return super().form_valid(form)
+    # def form_valid(self, form):  # используется при базовом классе FormView
+    #     form.save()
+    #     return super().form_valid(form)
+
+
+class UpdatePage(UpdateView):
+    template_name = 'women/addpage.html'
+    model = Women
+    fields = ['title', 'slug', 'photo', 'content', 'cat', 'is_published', 'husband']
+    #  success_url = reverse_lazy('women:home')
+    extra_context = {'title': 'Добавление страницы', 'menu': menu}
+
+
+class DeletePage(DeleteView):
+    template_name = 'women/deletepage.html'
+    model = Women
+    success_url = reverse_lazy('women:home')
+    extra_context = {'title': 'Удаление страницы', 'menu': menu}
 
 
 def about(request):

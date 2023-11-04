@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1> {{title}} </h1>
+    <form action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-error">{{ form.non_field_errors }}</div>
+        <p>Удаляемая запись: "{{ object }}"</p>
+        {{ form.as_p }}
+        <input type="submit" value="Удалить">
+    </form>
+{% endblock %}
