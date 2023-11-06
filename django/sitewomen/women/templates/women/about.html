@@ -7,10 +7,10 @@
 <p> {{ item.pk }}: {{ item.title }} </p>
 {% endfor %}
 
-<nav>
+<nav  class="list-pages">
     <ul>
         {% for p in page_object.paginator.page_range %}
-        <li>
+        <li class="page-num">
             <a href="?page={{ p }}">{{ p }}</a>
         </li>
         {% endfor %}
