@@ -9,6 +9,7 @@ from django.template.loader import render_to_string
 
 from women.forms import AddPostForm, UploadFileForm
 from women.models import Women, Category, TagPosts, UploadFiles
+from women.utils import DataMixin
 
 menu = [{'title': "О сайте", 'url_name': 'women:about'},
         {'title': "Добавить статью", 'url_name': 'women:add_page'},
@@ -16,15 +17,6 @@ menu = [{'title': "О сайте", 'url_name': 'women:about'},
         {'title': "Войти", 'url_name': 'women:login'}
 ]
 
-
-# data_db = [
-#     {'id': 1, 'title': 'Анджелина Джоли', 'content': '''<h3>Анджелина Джоли</h3> (англ. Angelina Jolie[7],
-#     при рождении Войт (англ. Voight), ранее Джоли Питт (англ. Jolie Pitt); род. 4 июня 1975, Лос-Анджелес, Калифорния, США) — американская актриса кино, телевидения и озвучивания, кинорежиссёр, сценаристка, продюсер, фотомодель, посол доброй воли ООН.
-#     Обладательница премии «Оскар», трёх премий «Золотой глобус» (первая актриса в истории, три года подряд выигравшая премию) и двух «Премий Гильдии киноактёров США».''',
-#      'is_published': True},
-#     {'id': 2, 'title': 'Марго Робби', 'content': 'Биография Марго Робби', 'is_published': False},
-#     {'id': 3, 'title': 'Джулия Робертс', 'content': 'Биография Джулия Робертс', 'is_published': True},
-# ]
 
 # def handle_uploaded_file(f):
 #     with open(f"uploads/{f.name}", "wb+") as destination:
@@ -57,23 +49,25 @@ def handle_uploaded_file(f):
     # st = render_to_string('women/index.html')
     # return HttpResponse(st)
 
-class WomenHome(ListView):
+class WomenHome(DataMixin, ListView):
     # model = Women
     template_name = 'women/index.html'
     context_object_name = 'posts'
-    extra_context = {
-            'title': 'Главная страница',
-            'menu': menu,
-            #  'posts': Women.published.all().prefetch_related(Prefetch('cat', to_attr='category')),
-            'cat_selected': 0
-    }
+    title_page = 'Главная страница'
+    cat_selected = 0
+    # extra_context = {
+    #         'title': 'Главная страница',
+    #         'menu': menu,
+    #         #  'posts': Women.published.all().prefetch_related(Prefetch('cat', to_attr='category')),
+    #         'cat_selected': 0
+    # }
 
 
     def get_queryset(self):
         return Women.published.all().prefetch_related(Prefetch('cat', to_attr='category'))
 
 
-class WomenCategory(ListView):
+class WomenCategory(DataMixin, ListView):
     template_name = 'women/index.html'
     context_object_name = 'posts'
     allow_empty = False
@@ -81,16 +75,19 @@ class WomenCategory(ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         cat = context['posts'][0].cat
-        context['title'] = 'Категория - ' + cat.name
-        context['menu'] = menu
-        context['cat_selected'] = cat.id
-        return context
+        return self.get_mixin_context(context,
+                                      title='Категория - ' + cat.name,
+                                      cat_selected=cat.pk)
+        # context['title'] = 'Категория - ' + cat.name
+        # context['menu'] = menu
+        # context['cat_selected'] = cat.id
+        # return context
 
     def get_queryset(self):
         return Women.published.filter(cat__slug=self.kwargs['cat_slug']).prefetch_related(Prefetch('cat', to_attr='category'))
 
 
-class WomenTag(ListView):
+class WomenTag(DataMixin, ListView):
     template_name = 'women/index.html'
     context_object_name = 'posts'
     allow_empty = True
@@ -103,16 +100,16 @@ class WomenTag(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        tag = self.kwargs['tag_slug']  # context['posts'][0].tags.all()[0]
-        context['title'] = 'Категория - ' + self.kwargs['tag_name']
-        context['menu'] = menu
-        context['cat_selected'] = None
-        return context
+        return self.get_mixin_context(context, title='Тег: ' + self.kwargs['tag_name'])
+        # tag = self.kwargs['tag_slug']  # context['posts'][0].tags.all()[0]
+        # context['title'] = 'Категория - ' + self.kwargs['tag_name']
+        # context['menu'] = menu
+        # context['cat_selected'] = None
+        # return context
 
 
-class ShowPost(DetailView):
+class ShowPost(DataMixin, DetailView):
     template_name = 'women/post.html'
-    model = Women
     context_object_name = 'post'
     #  pk_url_kwarg = 'pk'
     slug_url_kwarg = 'post_slug'
@@ -120,33 +117,30 @@ class ShowPost(DetailView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = context['post'].title
-        context['menu'] = menu
-        return context
+        # context['title'] = context['post'].title
+        return self.get_mixin_context(context, title = context['post'].title)
 
     def get_object(self, queryset=None):
         return get_object_or_404(Women.published, slug=self.kwargs[self.slug_url_kwarg])
 
 
-class AddPage(CreateView):
+class AddPage(DataMixin, CreateView):
     template_name = 'women/addpage.html'
     model = Women
     fields = ['title', 'slug', 'photo', 'content', 'cat', 'is_published']
     success_url = reverse_lazy('women:home')
-    extra_context = {'title': 'Добавление страницы', 'menu': menu}
-
-    # def form_valid(self, form):  # используется при базовом классе FormView
-    #     form.save()
-    #     return super().form_valid(form)
+    title_page = 'Добавление страницы'
+    # extra_context = {'title': 'Добавление страницы', 'menu': menu}
 
 
-class UpdatePage(UpdateView):
+
+class UpdatePage(DataMixin, UpdateView):
     template_name = 'women/addpage.html'
     model = Women
     fields = ['title', 'slug', 'photo', 'content', 'cat', 'is_published', 'husband']
+    title_page = 'Редактирование статьи'
+    #  extra_context = {'title': 'Добавление страницы', 'menu': menu}
     #  success_url = reverse_lazy('women:home')
-    extra_context = {'title': 'Добавление страницы', 'menu': menu}
-
 
 class DeletePage(DeleteView):
     template_name = 'women/deletepage.html'
