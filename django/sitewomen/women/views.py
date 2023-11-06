@@ -142,11 +142,11 @@ class UpdatePage(DataMixin, UpdateView):
     #  extra_context = {'title': 'Добавление страницы', 'menu': menu}
     #  success_url = reverse_lazy('women:home')
 
-class DeletePage(DeleteView):
+class DeletePage(DataMixin, DeleteView):
     template_name = 'women/deletepage.html'
     model = Women
     success_url = reverse_lazy('women:home')
-    extra_context = {'title': 'Удаление страницы', 'menu': menu}
+    title_page = 'Удаление страницы'
 
 
 def about(request):
