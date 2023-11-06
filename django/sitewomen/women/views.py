@@ -5,7 +5,9 @@ from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.db.models import Prefetch
 from  django.views import View
 from  django.views.generic import TemplateView, ListView, DetailView, FormView, CreateView, UpdateView, DeleteView
+from django.core.paginator import Paginator
 from django.template.loader import render_to_string
+
 
 from women.forms import AddPostForm, UploadFileForm
 from women.models import Women, Category, TagPosts, UploadFiles
@@ -150,16 +152,22 @@ class DeletePage(DataMixin, DeleteView):
 
 
 def about(request):
-    if request.method == 'POST':
-        form = UploadFileForm(request.POST, request.FILES)
-        if form.is_valid():
-            # handle_uploaded_file(form.cleaned_data['file'])
-            fr = UploadFiles(file=form.cleaned_data['file'])
-            fr.save()
-    else:
-        form = UploadFileForm()
-    return render(request, 'women/about.html', {'title': 'О сайте',
-                                                'menu': menu, 'form': form})
+    contact_list = Women.published.all()
+    paginator = Paginator(contact_list, 3)
+    page_number = request.GET.get('page')
+    page_object = paginator.get_page(page_number)
+    return render(request, 'women/about.html',
+                  {'title': 'О сайте', 'page_object':  page_object})
+    # if request.method == 'POST':
+    #     form = UploadFileForm(request.POST, request.FILES)
+    #     if form.is_valid():
+    #         # handle_uploaded_file(form.cleaned_data['file'])
+    #         fr = UploadFiles(file=form.cleaned_data['file'])
+    #         fr.save()
+    # else:
+    #     form = UploadFileForm()
+    # return render(request, 'women/about.html', {'title': 'О сайте',
+    #                                             'menu': menu, 'form': form})
 
 
 # def show_post(request, post_slug):
