@@ -25,6 +25,7 @@ SECRET_KEY = config('DJANGO_SECRET_KEY')
 INSTALLED_APPS: Tuple[str, ...] = (
     # Your apps go here:
     'women.apps.WomenConfig',
+    'users.apps.UsersConfig',
 
     # Default django apps:
     'django.contrib.auth',
