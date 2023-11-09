@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from django.core.validators import MinLengthValidator, MaxLengthValidator
+from django.contrib.auth import get_user_model
 # from django.template.defaultfilters import slugify
 from pytils.translit import slugify
 
@@ -31,6 +32,7 @@ class Women(models.Model):
     tags = models.ManyToManyField('TagPosts', blank=True, related_name='womens', verbose_name='Теги')
     husband = models.OneToOneField('Husband', on_delete=models.SET_NULL,
                                    null=True, blank=True, related_name='women', verbose_name='Муж')
+    author = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, related_name='posts', default=None)
 
     objects = models.Manager()
     published = PublishedManager()

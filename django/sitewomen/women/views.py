@@ -6,6 +6,8 @@ from django.db.models import Prefetch
 from  django.views import View
 from  django.views.generic import TemplateView, ListView, DetailView, FormView, CreateView, UpdateView, DeleteView
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.template.loader import render_to_string
 
 
@@ -126,14 +128,19 @@ class ShowPost(DataMixin, DetailView):
         return get_object_or_404(Women.published, slug=self.kwargs[self.slug_url_kwarg])
 
 
-class AddPage(DataMixin, CreateView):
+class AddPage(LoginRequiredMixin, DataMixin, CreateView):
     template_name = 'women/addpage.html'
-    model = Women
-    fields = ['title', 'slug', 'photo', 'content', 'cat', 'is_published']
-    success_url = reverse_lazy('women:home')
+    form_class = AddPostForm
     title_page = 'Добавление страницы'
+    # model = Women
+    # fields = ['title', 'slug', 'photo', 'content', 'cat', 'is_published', 'husband']
+    # success_url = reverse_lazy('women:home')  маршрут определяется на основе метода get_absolute_url()
     # extra_context = {'title': 'Добавление страницы', 'menu': menu}
 
+    def form_valid(self, form):
+        w = form.save(commit=False)
+        w.author = self.request.user
+        return super().form_valid(form)
 
 
 class UpdatePage(DataMixin, UpdateView):
@@ -151,6 +158,7 @@ class DeletePage(DataMixin, DeleteView):
     title_page = 'Удаление страницы'
 
 
+@login_required
 def about(request):
     contact_list = Women.published.all()
     paginator = Paginator(contact_list, 3)

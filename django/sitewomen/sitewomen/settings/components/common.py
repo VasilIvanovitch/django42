@@ -237,3 +237,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 LOGIN_REDIRECT_URL = 'women:home'  #  config('LOGIN_REDIRECT_URL')
 LOGOUT_REDIRECT_URL = 'women:home'
+LOGIN_URL = 'users:login' # config('LOGIN_URL')
