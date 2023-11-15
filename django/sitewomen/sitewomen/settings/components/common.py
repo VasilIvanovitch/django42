@@ -26,6 +26,7 @@ INSTALLED_APPS: Tuple[str, ...] = (
     # Your apps go here:
     'women.apps.WomenConfig',
     'users.apps.UsersConfig',
+    'social_django',
 
     # Default django apps:
     'django.contrib.auth',
@@ -94,6 +95,8 @@ DATABASES = {
         },
     },
 }
+
+SOCIAL_AUTH_JSONFIELD_ENABLED = True
 
 # DATABASES = {
 #     'default': {
@@ -189,6 +192,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/4.2/topics/auth/
 
 AUTHENTICATION_BACKENDS = (
+    'social_core.backends.github.GithubOAuth2',
     'django.contrib.auth.backends.ModelBackend',
     'users.authentication.EmailAuthBackend'
 #     'axes.backends.AxesBackend',
