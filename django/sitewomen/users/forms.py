@@ -1,6 +1,9 @@
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordChangeForm
+from django.forms.models import inlineformset_factory
+
+from .models import Profile
 
 
 class LoginUserForm(AuthenticationForm):
@@ -59,6 +62,14 @@ class ProfileUserForm(forms.ModelForm):
             'last_name': forms.TextInput(attrs={'class': 'form-input'}),
         }
 
+
+# ProfileUserFormSet = inlineformset_factory(
+#     get_user_model(),  # Родительская модель (User)
+#     Profile,  # Дочерняя модель (Profile)
+#     fields=['photo', 'date_birth'],  # Поля для включения в форму
+#     can_delete=False,  # Не разрешать удаление объекта Profile из формы
+#     extra=1  # Количество дополнительных форм, которые будут отображаться по умолчанию
+# )
 
 class UserPasswordChangeForm(PasswordChangeForm):
     old_password = forms.CharField(label="Старый пароль", widget=forms.PasswordInput(attrs={'class': 'form-input'}))

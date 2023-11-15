@@ -7,6 +7,9 @@ from django.views.generic import CreateView, UpdateView
 from .forms import LoginUserForm, RegisterUserForm, ProfileUserForm, UserPasswordChangeForm
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.forms.models import inlineformset_factory
+
+from .models import Profile
 
 
 class LoginUser(LoginView):
@@ -37,6 +40,29 @@ class ProfileUser(LoginRequiredMixin, UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # Получаем объект пользователя
+        user = self.get_object()
+
+        # Создаем ProfileUserFormSet для пользователя
+        ProfileUserFormSet = inlineformset_factory(
+            get_user_model(),  # Родительская модель (User)
+            Profile,  # Дочерняя модель (Profile)
+            fields=['photo', 'date_birth'],  # Поля для включения в форму
+            can_delete=False,  # Не разрешать удаление объекта Profile из формы
+            extra=1  # Количество дополнительных форм, которые будут отображаться по умолчанию
+        )
+        formset = ProfileUserFormSet(instance=user)
+        for form in formset.forms:
+            form.fields['photo'].widget.attrs['class'] = 'form-input'
+            form.fields['date_birth'].widget.attrs['class'] = 'form-input'
+        # Передаем форму ProfileUserFormSet в контекст
+        context['formset'] = formset
+        # context['formset'] = ProfileUserFormSet(instance=user)
+        return context
 
 
 class UserPasswordChange(PasswordChangeView):
