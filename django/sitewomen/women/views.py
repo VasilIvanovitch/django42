@@ -6,8 +6,8 @@ from django.db.models import Prefetch
 from  django.views import View
 from  django.views.generic import TemplateView, ListView, DetailView, FormView, CreateView, UpdateView, DeleteView
 from django.core.paginator import Paginator
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.template.loader import render_to_string
 
 
@@ -128,10 +128,11 @@ class ShowPost(DataMixin, DetailView):
         return get_object_or_404(Women.published, slug=self.kwargs[self.slug_url_kwarg])
 
 
-class AddPage(LoginRequiredMixin, DataMixin, CreateView):
+class AddPage(PermissionRequiredMixin, LoginRequiredMixin, DataMixin, CreateView):
     template_name = 'women/addpage.html'
     form_class = AddPostForm
     title_page = 'Добавление страницы'
+    permission_required = 'women.add_women'
     # model = Women
     # fields = ['title', 'slug', 'photo', 'content', 'cat', 'is_published', 'husband']
     # success_url = reverse_lazy('women:home')  маршрут определяется на основе метода get_absolute_url()
@@ -143,11 +144,12 @@ class AddPage(LoginRequiredMixin, DataMixin, CreateView):
         return super().form_valid(form)
 
 
-class UpdatePage(DataMixin, UpdateView):
+class UpdatePage(PermissionRequiredMixin, DataMixin, UpdateView):
     template_name = 'women/addpage.html'
     model = Women
     fields = ['title', 'slug', 'photo', 'content', 'cat', 'is_published', 'husband']
     title_page = 'Редактирование статьи'
+    permission_required = 'women.change_women'
     #  extra_context = {'title': 'Добавление страницы', 'menu': menu}
     #  success_url = reverse_lazy('women:home')
 
@@ -208,7 +210,7 @@ def about(request):
 def login(request):
     return HttpResponse(f"<h2>Вход</h2>")
 
-
+@permission_required(perm='women.view_women', raise_exception=True)
 def contact(request):
     return HttpResponse(f"<h2>Обратная связь</h2>")
 
