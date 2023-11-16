@@ -16,10 +16,12 @@
     <div class="form-error">{{ f.errors }}</div>
     {% endfor %}
 
-
     <p ><button type="submit">Сохранить</button></p>
 </form>
+
+{% if not perms.user.social_auth %}
+
 <hr>
 <p ><a href="{% url 'users:password_change' %}">Сменить пароль</a></p>
-
+{% endif %}
 {% endblock %}

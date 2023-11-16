@@ -240,6 +240,19 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 SOCIAL_AUTH_GITHUB_KEY = config('SOCIAL_AUTH_GITHUB_KEY', cast=str)
 SOCIAL_AUTH_GITHUB_SECRET = config('SOCIAL_AUTH_GITHUB_SECRET', cast=str)
 
+SOCIAL_AUTH_PIPELINE = (
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.auth_allowed',
+    'social_core.pipeline.social_auth.social_user',
+    'social_core.pipeline.user.get_username',
+    'social_core.pipeline.user.create_user',
+    'users.pipeline.new_users_handler',
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
+    'social_core.pipeline.user.user_details',
+)
+
 LOGIN_REDIRECT_URL = 'women:home'  #  config('LOGIN_REDIRECT_URL')
 LOGOUT_REDIRECT_URL = 'women:home'
 LOGIN_URL = 'users:login' # config('LOGIN_URL')
