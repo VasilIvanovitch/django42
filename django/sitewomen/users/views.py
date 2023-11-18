@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordChangeDoneView
 from django.views.generic import CreateView, UpdateView
-from .forms import LoginUserForm, RegisterUserForm, ProfileUserForm, UserPasswordChangeForm
+from .forms import LoginUserForm, RegisterUserForm, ProfileUserForm, UserPasswordChangeForm, ProfileForm
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms.models import inlineformset_factory
@@ -41,6 +41,26 @@ class ProfileUser(LoginRequiredMixin, UpdateView):
     def get_object(self, queryset=None):
         return self.request.user
 
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     if self.request.POST:
+    #         context['profile_form'] = ProfileForm(self.request.POST)
+    #     else:
+    #         context['profile_form'] = ProfileForm()
+    #     return context
+    #
+    def form_valid(self, form):
+        context = self.get_context_data()
+        profile_form = context['profile_form']
+        if profile_form.is_valid():
+            self.object = form.save()
+            profile_form.instance.user = self.object
+            profile_form.save()
+            return super().form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
@@ -60,7 +80,7 @@ class ProfileUser(LoginRequiredMixin, UpdateView):
             form.fields['photo'].widget.attrs['class'] = 'form-input'
             form.fields['date_birth'].widget.attrs['class'] = 'form-input'
         # Передаем форму ProfileUserFormSet в контекст
-        context['formset'] = formset
+        context['profile_form'] = formset
         # context['formset'] = ProfileUserFormSet(instance=user)
         return context
 

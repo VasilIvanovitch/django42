@@ -27,6 +27,7 @@ INSTALLED_APPS: Tuple[str, ...] = (
     'women.apps.WomenConfig',
     'users.apps.UsersConfig',
     'social_django',
+    'captcha',
 
     # Default django apps:
     'django.contrib.auth',

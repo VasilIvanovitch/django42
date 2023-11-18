@@ -11,7 +11,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.template.loader import render_to_string
 
 
-from women.forms import AddPostForm, UploadFileForm
+from women.forms import AddPostForm, UploadFileForm, ContactForm
 from women.models import Women, Category, TagPosts, UploadFiles
 from women.utils import DataMixin
 
@@ -210,9 +210,21 @@ def about(request):
 def login(request):
     return HttpResponse(f"<h2>Вход</h2>")
 
-@permission_required(perm='women.view_women', raise_exception=True)
-def contact(request):
-    return HttpResponse(f"<h2>Обратная связь</h2>")
+
+class ContactFormView(LoginRequiredMixin, DataMixin, FormView):
+    form_class = ContactForm
+    template_name = 'women/contact.html'
+    success_url = reverse_lazy('women:home')
+    title_page = "Обратная связь"
+
+    def form_valid(self, form):
+        print(form.cleaned_data)
+        return super().form_valid(form)
+
+
+# @permission_required(perm='women.view_women', raise_exception=True)
+# def contact(request):
+#     return HttpResponse(f"<h2>Обратная связь</h2>")
 
 
 # def show_category(request, cat_slug):
