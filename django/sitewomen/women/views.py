@@ -8,6 +8,7 @@ from  django.views.generic import TemplateView, ListView, DetailView, FormView, 
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.core.cache import cache
 from django.template.loader import render_to_string
 
 
@@ -68,7 +69,11 @@ class WomenHome(DataMixin, ListView):
 
 
     def get_queryset(self):
-        return Women.published.all().prefetch_related(Prefetch('cat', to_attr='category'))
+        w_lst = cache.get('women_posts')
+        if not w_lst:
+            w_lst = Women.published.all().prefetch_related(Prefetch('cat', to_attr='category'))
+            cache.set('women_posts', w_lst, 30)
+        return w_lst
 
 
 class WomenCategory(DataMixin, ListView):

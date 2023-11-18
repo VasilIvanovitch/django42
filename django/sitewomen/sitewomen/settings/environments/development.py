@@ -167,3 +167,14 @@ DATABASES['default']['CONN_MAX_AGE'] = 5
 # EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
+CACHES = {
+    "default": {
+        # "BACKEND": "django.core.cache.backends.dummy.DummyCache",
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379",
+    }
+}
+
+# CACHE_MIDDLEWARE_ALIAS = 'default'
+# CACHE_MIDDLEWARE_SECONDS = 10
+# CACHE_MIDDLEWARE_KEY_PREFIX = 'sitewomen'

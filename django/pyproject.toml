@@ -20,6 +20,8 @@ social-auth-app-django = "^5.4.0"
 werkzeug = "^3.0.1"
 pyopenssl = "^23.3.0"
 django-simple-captcha = "^0.5.20"
+redis = "^5.0.1"
+hiredis = "^2.2.3"
 
 
 [build-system]
