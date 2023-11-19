@@ -26,9 +26,11 @@ INSTALLED_APPS: Tuple[str, ...] = (
     # Your apps go here:
     'women.apps.WomenConfig',
     'users.apps.UsersConfig',
+
     'social_django',
     'captcha',
-
+    'django.contrib.sites',
+    'django.contrib.sitemaps',
     # Default django apps:
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -270,7 +272,7 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SERVER_EMAIL = EMAIL_HOST_USER
 EMAIL_ADMIN = EMAIL_HOST_USER
 
-
+SITE_ID = 1
 # CACHES = {
 #     "default": {
 #         "BACKEND": "django.core.cache.backends.redis.RedisCache",
